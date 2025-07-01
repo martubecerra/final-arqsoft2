@@ -4,6 +4,7 @@ import (
 	"courses-api/controllers/comments"
 	"courses-api/controllers/courses"
 	"courses-api/controllers/files"
+	"courses-api/middleware"
 
 	"time"
 
@@ -12,7 +13,7 @@ import (
 )
 
 // Función para configurar las rutas
-func SetupRouter(courseController courses.Controller, commentController comments.Controller, fileController files.Controller) *gin.Engine {
+func SetupRouter(courseController courses.Controller, commentController comments.Controller, fileController files.Controller, jwtSecret string) *gin.Engine {
 	r := gin.Default()
 
 	// Configuración de CORS
@@ -28,11 +29,11 @@ func SetupRouter(courseController courses.Controller, commentController comments
 	// Rutas para cursos
 	coursesGroup := r.Group("/courses")
 	{
-		coursesGroup.POST("", courseController.CreateCourse)       // Crear curso
-		coursesGroup.GET("", courseController.GetCourses)          // Obtener todos los cursos
-		coursesGroup.GET("/:id", courseController.GetCourseByID)   // Obtener curso por ID
-		coursesGroup.PUT("/:id", courseController.UpdateCourse)    // Actualizar curso
-		coursesGroup.DELETE("/:id", courseController.DeleteCourse) // Eliminar curso
+		coursesGroup.POST("", middleware.AdminOnly(jwtSecret), courseController.CreateCourse)       // Crear curso
+		coursesGroup.GET("", courseController.GetCourses)                                           // Obtener todos los cursos
+		coursesGroup.GET("/:id", courseController.GetCourseByID)                                    // Obtener curso por ID
+		coursesGroup.PUT("/:id", middleware.AdminOnly(jwtSecret), courseController.UpdateCourse)    // Actualizar curso
+		coursesGroup.DELETE("/:id", middleware.AdminOnly(jwtSecret), courseController.DeleteCourse) // Eliminar curso
 		coursesGroup.POST("/:id/comments", commentController.AddCommentToCourse)
 		coursesGroup.GET("/:id/comments", commentController.GetCommentsByCourseID)
 		coursesGroup.POST("/:id/files", fileController.CreateFile)

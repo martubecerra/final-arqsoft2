@@ -68,13 +68,19 @@ function EditCourse() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const token = localStorage.getItem('token');
         try {
             const payload = {
                 ...courseData,
                 instructor_id: Number(courseData.instructor_id),
                 capacity: Number(courseData.capacity)
             };
-            await axios.put(`http://localhost:8080/courses/${courseId}`, payload);
+            await axios.put(`http://localhost:8080/courses/${courseId}`, payload, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
             alert('Curso actualizado con éxito');
             navigate('/manage-courses');
         } catch (error) {

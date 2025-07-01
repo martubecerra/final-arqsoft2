@@ -6,9 +6,7 @@ import (
 	"courses-api/clients"
 	"courses-api/domain/courses"
 	"fmt"
-	"math/rand"
 	"sync"
-	"time"
 )
 
 // Repository interface para las operaciones de curso
@@ -52,11 +50,6 @@ func NewService(repository Repository, commentsRepository CommentsRepository, fi
 		eventsQueue:        eventsQueue,
 		httpClient:         httpClient,
 	}
-}
-
-// Inicializa el generador de números aleatorios
-func init() {
-	rand.Seed(time.Now().UnixNano())
 }
 
 func (s Service) CreateCourse(ctx context.Context, req courses.CreateCourseRequest) (courses.CourseResponse, error) {

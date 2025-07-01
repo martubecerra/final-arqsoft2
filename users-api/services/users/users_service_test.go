@@ -2,13 +2,14 @@ package users_test
 
 import (
 	"errors"
-	"github.com/stretchr/testify/assert"
 	"testing"
 	dao "users-api/dao/users"
 	domain "users-api/domain/users"
 	"users-api/internal/tokenizers"
 	repositories "users-api/repositories/users"
 	service "users-api/services/users"
+
+	"github.com/stretchr/testify/assert"
 )
 
 var (
@@ -46,7 +47,7 @@ func TestService(t *testing.T) {
 
 		assert.Error(t, err)
 		assert.Nil(t, result)
-		assert.Equal(t, "error getting all users: db error", err.Error()) // Assert expectations    // Assert expectations    // Assert expectations
+		assert.Equal(t, "error getting all users: db error", err.Error()) 
 
 		mainRepo.AssertExpectations(t)
 		cacheRepo.AssertExpectations(t)
@@ -214,7 +215,7 @@ func TestService(t *testing.T) {
 
 		mockUser := dao.User{ID: 1, Username: username, Password: hashedPassword}
 		cacheRepo.On("GetByUsername", username).Return(mockUser, nil).Once()
-		tokenizer.On("GenerateToken", username, int64(1)).Return("token", nil).Once()
+		tokenizer.On("GenerateToken", username, int64(1), "").Return("token", nil).Once()
 
 		response, err := usersService.Login(username, password)
 
@@ -272,7 +273,7 @@ func TestService(t *testing.T) {
 
 		mockUser := dao.User{ID: 1, Username: username, Password: hashedPassword}
 		cacheRepo.On("GetByUsername", username).Return(mockUser, nil).Once()
-		tokenizer.On("GenerateToken", username, int64(1)).Return("", errors.New("token error")).Once()
+		tokenizer.On("GenerateToken", username, int64(1), "").Return("", errors.New("token error")).Once()
 
 		response, err := usersService.Login(username, password)
 

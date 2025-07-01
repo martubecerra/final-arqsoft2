@@ -25,9 +25,14 @@ function ManageCourses() {
     };
 
     const handleDelete = async (courseId) => {
+        const token = localStorage.getItem('token');
         if (window.confirm('¿Estás seguro de que deseas eliminar este curso?')) {
             try {
-                await axios.delete(`http://localhost:8080/courses/${courseId}`);
+                await axios.delete(`http://localhost:8080/courses/${courseId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
                 // Actualizar la lista de cursos después de eliminar
                 const updatedCourses = cursos.filter(curso => curso.id !== courseId);
                 setCursos(updatedCourses);

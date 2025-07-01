@@ -157,8 +157,14 @@ func main() {
 	fileService := filesServices.NewService(fileRepo, courseRepo)
 	fileController := filesController.NewController(fileService)
 
+	// Leer la clave JWT desde la variable de entorno
+	jwtSecret := os.Getenv("JWT_SECRET")
+	if jwtSecret == "" {
+		jwtSecret = "ThisIsAnExampleJWTKey!"
+	}
+
 	// Configurar las rutas
-	router := coursesRouter.SetupRouter(courseController, commentController, fileController)
+	router := coursesRouter.SetupRouter(courseController, commentController, fileController, jwtSecret)
 
 	// Configuración de CORS
 	router.Use(cors.New(cors.Config{

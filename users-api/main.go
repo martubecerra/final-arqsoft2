@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"os"
 	"time"
 	healthControllers "users-api/controllers/health"
 	controllers "users-api/controllers/users"
@@ -43,9 +44,13 @@ func main() {
 	})
 
 	// Tokenizer
+	jwtSecret := os.Getenv("JWT_SECRET")
+	if jwtSecret == "" {
+		jwtSecret = "ThisIsAnExampleJWTKey!"
+	}
 	jwtTokenizer := tokenizers.NewTokenizer(
 		tokenizers.JWTConfig{
-			Key:      "ThisIsAnExampleJWTKey!",
+			Key:      jwtSecret,
 			Duration: 1 * time.Hour,
 		},
 	)

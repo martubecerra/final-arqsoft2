@@ -60,10 +60,12 @@ function AddCourse() {
             imageBase64: imageBase64 || undefined
         };
 
+        const token = localStorage.getItem('token');
         try {
             await axios.post('http://localhost:8080/courses', courseData, {
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
                 }
             });
             setError('');
